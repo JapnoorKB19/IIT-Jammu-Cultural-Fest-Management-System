@@ -8,23 +8,52 @@ const generateToken = require('../utils/generateToken');
 // @desc    Register a new student member (Admin or SuperAdmin)
 // @route   POST /api/auth/member/register
 // @access  Public (for now, will be Admin-only later)
+// @desc    Register a new student member (Admin or SuperAdmin)
+// @route   POST /api/auth/member/register
+// @access  SuperAdmin
+// @desc    Register a new student member
+// @route   POST /api/auth/member/register
+// @access  SuperAdmin
 exports.registerStudentMember = async (req, res) => {
   const { Student_ID, Name, Role, Team_ID, Password } = req.body;
 
+  // --- Field Validation ---
   if (!Student_ID || !Name || !Role || !Password) {
     return res.status(400).json({ message: 'Student_ID, Name, Role, and Password are required' });
   }
-  
-  // New logic: Team_ID is only required if the role is Head or Co-head
-  if ((Role === 'Head' || Role === 'Co-head') && !Team_ID) {
-    return res.status(400).json({ message: 'Team_ID is required for Head and Co-head roles' });
+  // Team ID is required unless the new user is a SuperAdmin
+  if (Role !== 'SuperAdmin' && !Team_ID) {
+    return res.status(400).json({ message: 'Team_ID is required for Head, Co-head, and Member roles' });
   }
 
   try {
+    // --- THIS IS THE NEW LOGIC ---
+    if (Role === 'Head') {
+      const [existing] = await pool.query(
+        'SELECT Student_ID FROM Student_Members WHERE Team_ID = ? AND Role = \'Head\'',
+        [Team_ID]
+      );
+      if (existing.length > 0) {
+        return res.status(400).json({ 
+          message: 'This team already has a Head. You can only assign a Co-head or Member.' 
+        });
+      }
+    } else if (Role === 'Co-head') {
+      const [existing] = await pool.query(
+        'SELECT Student_ID FROM Student_Members WHERE Team_ID = ? AND Role = \'Co-head\'',
+        [Team_ID]
+      );
+      if (existing.length > 0) {
+        return res.status(400).json({ 
+          message: 'This team already has a Co-head. You can only assign a Head or Member.' 
+        });
+      }
+    }
+    // --- END OF NEW LOGIC ---
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(Password, salt);
-
-    // If Role is SuperAdmin, Team_ID will be explicitly set to null
+    
     const teamIdForDb = (Role === 'SuperAdmin') ? null : Team_ID;
 
     await pool.query(
@@ -44,7 +73,6 @@ exports.registerStudentMember = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
-
 // @desc    Login a student member & get token
 // @route   POST /api/auth/member/login
 // @access  Public

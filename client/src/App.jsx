@@ -13,7 +13,7 @@ import EventDetailPage from './pages/EventDetailPage';
 import RegisterPage from './pages/RegisterPage';
 import ParticipantLoginPage from './pages/ParticipantLoginPage';
 import MyRegistrationsPage from './pages/MyRegistrationsPage';
-import MyTicketsPage from './pages/MyTicketsPage'; // New
+import MyTicketsPage from './pages/MyTicketsPage';
 
 // Import Admin Pages
 import AdminDashboard from './pages/AdminDashboard';
@@ -29,6 +29,7 @@ import ParticipantManagement from './pages/ParticipantManagement';
 import EventRegistrationManagement from './pages/EventRegistrationManagement';
 import EventSponsorshipManagement from './pages/EventSponsorshipManagement';
 import EventTeamManagement from './pages/EventTeamManagement';
+import RegisterMemberPage from './pages/RegisterMemberPage'; // Import the new page
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
             <Route path="sponsors" element={<SponsorManagement />} />
             <Route path="teams" element={<TeamManagement />} />
             <Route path="members" element={<MemberManagement />} />
+            <Route path="members/register" element={<RegisterMemberPage />} />
             <Route path="budget" element={<BudgetManagement />} />
           </Route>
         </Route>

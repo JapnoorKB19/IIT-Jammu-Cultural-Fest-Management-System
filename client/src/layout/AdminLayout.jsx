@@ -3,19 +3,18 @@ import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const AdminLayout = () => {
-  // Get the ADMIN-specific functions and state
-  const { admin, logoutAdmin } = useAuth(); 
+  const { admin, logoutAdmin } = useAuth(); // We use 'admin' now
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logoutAdmin(); // Use logoutAdmin
+    logoutAdmin();
     navigate('/login');
   };
 
   return (
     <div className="flex min-h-screen">
+      {/* Sidebar Navigation */}
       <aside className="w-64 bg-gray-800 text-white p-4">
-        {/* ... (sidebar code is unchanged) ... */}
         <h2 className="text-2xl font-bold mb-6">Admin Menu</h2>
         <nav>
           <ul>
@@ -75,10 +74,21 @@ const AdminLayout = () => {
                 Budget
               </Link>
             </li>
+            
+            {/* --- THIS IS THE NEW LINK (SuperAdmin only) --- */}
+            {admin?.Role === 'SuperAdmin' && (
+              <li className="mb-2 border-t border-gray-700 mt-2 pt-2">
+                <Link to="/admin/members/register" className="block px-4 py-2 rounded text-yellow-400 hover:bg-gray-700">
+                  Register New Member
+                </Link>
+              </li>
+            )}
+            {/* --- END OF NEW LINK --- */}
           </ul>
         </nav>
       </aside>
 
+      {/* Main Content Area */}
       <div className="flex-1">
         <header className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,7 +97,6 @@ const AdminLayout = () => {
                 <span className="font-bold text-xl text-blue-600">IIT Jammu Fest</span>
               </div>
               <div className="flex items-center">
-                {/* Use the 'admin' object */}
                 <span className="mr-4">Welcome, {admin?.Name || 'Admin'} ({admin?.Role})</span>
                 <button
                   onClick={handleLogout}

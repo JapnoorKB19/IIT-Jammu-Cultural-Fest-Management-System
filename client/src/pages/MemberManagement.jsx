@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Modal from '../components/Modal';
 
 // This is the fixed list of roles from your database ENUM
-const ROLE_TYPES = ['Head', 'Co-head', 'SuperAdmin'];
+const ROLE_TYPES = ['Head', 'Co-head', 'SuperAdmin', 'Member'];
 
 const MemberManagement = () => {
   const [members, setMembers] = useState([]);
