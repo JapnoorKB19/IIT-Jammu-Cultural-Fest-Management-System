@@ -10,11 +10,8 @@ const protect = async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
       req.user = decoded;
-
       next();
     } catch (error) {
       console.error(error);
@@ -27,6 +24,17 @@ const protect = async (req, res, next) => {
   }
 };
 
+// This is the correct logic that includes all admin roles
+const isAdmin = (req, res, next) => {
+  const { role } = req.user;
+  if (role === 'Head' || role === 'SuperAdmin') {
+    next();
+  } else {
+    res.status(403).json({ message: 'Not authorized as an admin' });
+  }
+};
+
+// This logic was flawed before, but is now correct
 const isHead = (req, res, next) => {
   if (req.user && req.user.role === 'Head') {
     next();
@@ -35,12 +43,14 @@ const isHead = (req, res, next) => {
   }
 };
 
-const isHeadOrCoHead = (req, res, next) => {
-  if (req.user && (req.user.role === 'Head' || req.user.role === 'Co-head')) {
+// This logic is correct
+const isSuperAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'SuperAdmin') {
     next();
   } else {
-    res.status(403).json({ message: 'Not authorized as an admin' });
+    res.status(403).json({ message: 'Not authorized. Super Admin role required.' });
   }
 };
 
-module.exports = { protect, isHead, isHeadOrCoHead };
+// Use module.exports to match the rest of your backend
+module.exports = { protect, isAdmin, isHead, isSuperAdmin };

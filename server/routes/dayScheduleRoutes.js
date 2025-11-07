@@ -10,14 +10,14 @@ const {
 const {
   protect,
   isHead,
-  isHeadOrCoHead,
+  isAdmin,
 } = require('../middleware/authMiddleware');
 
-router.route('/').get(getAllDays).post(protect, isHeadOrCoHead, createDay);
+router.route('/').get(getAllDays).post(protect, isAdmin, createDay);
 router
   .route('/:id')
   .get(getDayById)
-  .put(protect, isHeadOrCoHead, updateDay)
-  .delete(protect, isHead, deleteDay);
+  .put(protect, isAdmin, updateDay)
+  .delete(protect, isHead, isAdmin, deleteDay);
 
 module.exports = router;

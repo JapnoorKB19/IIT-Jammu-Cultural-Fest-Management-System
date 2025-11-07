@@ -10,17 +10,17 @@ const {
 const {
   protect,
   isHead,
-  isHeadOrCoHead,
+  isAdmin,
 } = require('../middleware/authMiddleware');
 
 router
   .route('/')
   .get(getAllSponsors)
-  .post(protect, isHeadOrCoHead, createSponsor);
+  .post(protect, isAdmin, createSponsor);
 router
   .route('/:id')
   .get(getSponsorById)
-  .put(protect, isHeadOrCoHead, updateSponsor)
-  .delete(protect, isHead, deleteSponsor);
+  .put(protect, isAdmin, updateSponsor)
+  .delete(protect, isHead, isAdmin, deleteSponsor);
 
 module.exports = router;

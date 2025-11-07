@@ -7,20 +7,23 @@ const {
   updateVenue,
   deleteVenue,
 } = require('../controllers/venueControllers');
+
+// Import the new 'isAdmin' and remove the old 'isHeadOrCoHead'
 const {
   protect,
-  isHead,
-  isHeadOrCoHead,
+  isAdmin,
+  isSuperAdmin,
 } = require('../middleware/authMiddleware');
 
 router
   .route('/')
   .get(getAllVenues)
-  .post(protect, isHeadOrCoHead, createVenue);
+  .post(protect, isAdmin, createVenue); // Use 'isAdmin'
+
 router
   .route('/:id')
   .get(getVenueById)
-  .put(protect, isHeadOrCoHead, updateVenue)
-  .delete(protect, isHead, deleteVenue);
+  .put(protect, isAdmin, updateVenue) // Use 'isAdmin'
+  .delete(protect, isSuperAdmin, deleteVenue);
 
 module.exports = router;

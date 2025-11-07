@@ -17,6 +17,7 @@ const eventManagementRoutes = require('./routes/eventManagementRoutes');
 const eventSponsorshipRoutes = require('./routes/eventSponsorshipRoutes');
 const ticketRoutes = require('./routes/ticketRoutes');
 const authRoutes = require('./routes/authRoutes');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/management', eventManagementRoutes);
 app.use('/api/sponsorships', eventSponsorshipRoutes);
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

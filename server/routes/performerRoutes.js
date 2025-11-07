@@ -7,20 +7,23 @@ const {
   updatePerformer,
   deletePerformer,
 } = require('../controllers/performerController');
+
+// Import the new 'isAdmin' and 'isSuperAdmin'
 const {
   protect,
-  isHead,
-  isHeadOrCoHead,
+  isAdmin,
+  isSuperAdmin,
 } = require('../middleware/authMiddleware');
 
 router
   .route('/')
   .get(getAllPerformers)
-  .post(protect, isHeadOrCoHead, createPerformer);
+  .post(protect, isAdmin, createPerformer); // Use 'isAdmin'
+
 router
   .route('/:id')
   .get(getPerformerById)
-  .put(protect, isHeadOrCoHead, updatePerformer)
-  .delete(protect, isHead, deletePerformer);
+  .put(protect, isAdmin, updatePerformer) // Use 'isAdmin'
+  .delete(protect, isSuperAdmin, deletePerformer); // Use 'isSuperAdmin'
 
 module.exports = router;

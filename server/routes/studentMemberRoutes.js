@@ -6,18 +6,24 @@ const {
   updateStudentMember,
   deleteStudentMember,
 } = require('../controllers/studentMemberController');
+
+// Import the correct admin middleware
 const {
   protect,
-  isHead,
-  isHeadOrCoHead,
+  isAdmin,
+  isSuperAdmin,
 } = require('../middleware/authMiddleware');
 
-router.route('/').get(protect, isHeadOrCoHead, getAllStudentMembers);
+// Only Admins can see the list of all members
+router.route('/').get(protect, isAdmin, getAllStudentMembers);
 
 router
   .route('/:id')
-  .get(protect, isHeadOrCoHead, getStudentMemberById)
-  .put(protect, isHeadOrCoHead, updateStudentMember)
-  .delete(protect, isHead, deleteStudentMember);
+  // Only Admins can get a single member's details
+  .get(protect, isAdmin, getStudentMemberById)
+  // Only Admins can update a member (e.g., change their team/role)
+  .put(protect, isAdmin, updateStudentMember)
+  // Only SuperAdmins can delete a member
+  .delete(protect, isSuperAdmin, deleteStudentMember);
 
 module.exports = router;

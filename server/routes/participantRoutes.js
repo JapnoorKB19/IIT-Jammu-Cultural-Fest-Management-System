@@ -7,20 +7,28 @@ const {
   updateParticipant,
   deleteParticipant,
 } = require('../controllers/participantController');
+
+// Import the correct admin middleware
 const {
   protect,
-  isHead,
-  isHeadOrCoHead,
+  isAdmin,
+  isSuperAdmin,
 } = require('../middleware/authMiddleware');
 
 router
   .route('/')
-  .get(protect, isHeadOrCoHead, getAllParticipants)
-  .post(createParticipant);
+  // 'createParticipant' is public, so no 'protect' middleware
+  .post(createParticipant)
+  // Only admins can get a list of all participants
+  .get(protect, isAdmin, getAllParticipants);
+
 router
   .route('/:id')
-  .get(protect, isHeadOrCoHead, getParticipantById)
-  .put(protect, isHeadOrCoHead, updateParticipant)
-  .delete(protect, isHead, deleteParticipant);
+  // Only admins can get a single participant
+  .get(protect, isAdmin, getParticipantById)
+  // Only admins can update a participant
+  .put(protect, isAdmin, updateParticipant)
+  // Only SuperAdmins can delete a participant
+  .delete(protect, isSuperAdmin, deleteParticipant);
 
 module.exports = router;

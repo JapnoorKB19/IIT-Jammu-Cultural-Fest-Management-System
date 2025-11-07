@@ -10,15 +10,15 @@ const {
 const {
   protect,
   isHead,
-  isHeadOrCoHead,
+  isAdmin,
 } = require('../middleware/authMiddleware');
 
-router.route('/').post(protect, isHeadOrCoHead, createTicket);
+router.route('/').post(protect, isAdmin, createTicket);
 router.route('/event/:eventId').get(getTicketsByEvent);
 router.route('/participant/:participantId').get(getTicketsByParticipant);
 router
   .route('/:id')
-  .put(protect, isHeadOrCoHead, updateTicket)
-  .delete(protect, isHead, deleteTicket);
+  .put(protect, isAdmin, updateTicket)
+  .delete(protect, isHead, isAdmin, deleteTicket);
 
 module.exports = router;

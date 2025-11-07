@@ -7,17 +7,23 @@ const {
   updateTeam,
   deleteTeam,
 } = require('../controllers/teamController');
+
+// Import the correct admin middleware
 const {
   protect,
-  isHead,
-  isHeadOrCoHead,
+  isAdmin,
+  isSuperAdmin,
 } = require('../middleware/authMiddleware');
 
-router.route('/').get(getAllTeams).post(protect, isHeadOrCoHead, createTeam);
+router
+  .route('/')
+  .get(getAllTeams) // Publicly readable list
+  .post(protect, isAdmin, createTeam); // Only admins can create
+
 router
   .route('/:id')
-  .get(getTeamById)
-  .put(protect, isHeadOrCoHead, updateTeam)
-  .delete(protect, isHead, deleteTeam);
+  .get(getTeamById) // Publicly readable
+  .put(protect, isAdmin, updateTeam) // Only admins can update
+  .delete(protect, isSuperAdmin, deleteTeam); // Only SuperAdmins can delete
 
 module.exports = router;

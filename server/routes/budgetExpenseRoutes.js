@@ -7,20 +7,23 @@ const {
   updateExpense,
   deleteExpense,
 } = require('../controllers/budgetExpenseController');
+
+// Import the correct admin middleware
 const {
   protect,
-  isHead,
-  isHeadOrCoHead,
+  isAdmin,
+  isSuperAdmin,
 } = require('../middleware/authMiddleware');
 
 router
   .route('/')
-  .get(getAllExpenses)
-  .post(protect, isHeadOrCoHead, createExpense);
+  .get(protect, isAdmin, getAllExpenses) // Only admins can see the budget
+  .post(protect, isAdmin, createExpense); // Only admins can add expenses
+
 router
   .route('/:id')
-  .get(getExpenseById)
-  .put(protect, isHeadOrCoHead, updateExpense)
-  .delete(protect, isHead, deleteExpense);
+  .get(protect, isAdmin, getExpenseById) // Only admins can see a single expense
+  .put(protect, isAdmin, updateExpense) // Only admins can update
+  .delete(protect, isSuperAdmin, deleteExpense); // Only SuperAdmins can delete
 
 module.exports = router;
