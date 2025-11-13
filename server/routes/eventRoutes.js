@@ -10,14 +10,14 @@ const {
 const {
   protect,
   isHead,
-  isAdmin,
+  isSuperAdmin,
 } = require('../middleware/authMiddleware');
 
-router.route('/').get(getAllEvents).post(protect, isAdmin, createEvent);
+router.route('/').get(getAllEvents).post(protect, isSuperAdmin, createEvent);
 router
   .route('/:id')
   .get(getEventById)
-  .put(protect, isAdmin, updateEvent)
-  .delete(protect, isHead,isAdmin, deleteEvent);
+  .put(protect, isSuperAdmin, updateEvent)
+  .delete(protect, isSuperAdmin, deleteEvent);
 
 module.exports = router;

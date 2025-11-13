@@ -7,17 +7,23 @@ const {
   updateDay,
   deleteDay,
 } = require('../controllers/dayScheduleController');
+
+// We must import isSuperAdmin
 const {
   protect,
-  isHead,
   isAdmin,
+  isSuperAdmin, 
 } = require('../middleware/authMiddleware');
 
-router.route('/').get(getAllDays).post(protect, isAdmin, createDay);
+router
+  .route('/')
+  .get(getAllDays)
+  .post(protect, isAdmin, createDay); // 'isAdmin' is correct here
+
 router
   .route('/:id')
   .get(getDayById)
-  .put(protect, isAdmin, updateDay)
-  .delete(protect, isHead, isAdmin, deleteDay);
+  .put(protect, isAdmin, updateDay) // 'isAdmin' is correct here
+  .delete(protect, isSuperAdmin, deleteDay); // FIX: This must be 'isSuperAdmin'
 
 module.exports = router;

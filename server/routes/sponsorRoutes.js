@@ -9,8 +9,8 @@ const {
 } = require('../controllers/sponsorController');
 const {
   protect,
-  isHead,
   isAdmin,
+  isSuperAdmin
 } = require('../middleware/authMiddleware');
 
 router
@@ -21,6 +21,6 @@ router
   .route('/:id')
   .get(getSponsorById)
   .put(protect, isAdmin, updateSponsor)
-  .delete(protect, isHead, isAdmin, deleteSponsor);
+  .delete(protect, isSuperAdmin, deleteSponsor);
 
 module.exports = router;

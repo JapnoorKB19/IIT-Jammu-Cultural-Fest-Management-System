@@ -11,6 +11,7 @@ const {
   protect,
   isHead,
   isAdmin,
+  isSuperAdmin
 } = require('../middleware/authMiddleware');
 
 router.route('/').post(protect, isAdmin, createTicket);
@@ -19,6 +20,6 @@ router.route('/participant/:participantId').get(getTicketsByParticipant);
 router
   .route('/:id')
   .put(protect, isAdmin, updateTicket)
-  .delete(protect, isHead, isAdmin, deleteTicket);
+  .delete(protect, isSuperAdmin, deleteTicket);
 
 module.exports = router;
